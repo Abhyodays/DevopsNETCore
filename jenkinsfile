@@ -53,6 +53,7 @@ pipeline{
                 images_to_remove=\$(docker images -f "dangling=true" -q --filter=reference="${IMAGE_NAME}*")
                 if [ -n "\$images_to_remove" ]; then
                     docker rmi \$images_to_remove
+                    fi
                     """
             }
         }
