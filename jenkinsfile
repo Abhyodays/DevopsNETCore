@@ -38,7 +38,7 @@ pipeline{
          stage('Remove Old Images') {
             steps {
                 script {
-                    sh 'docker rmi \$(docker images -f "dangling=true" -q "${IMAGE_NAME}")'
+                    sh 'docker rmi $(docker images -f "dangling=true" -q --filter=reference="abhyoday/devops_net_core") || true'
                 }
             }
         }
