@@ -45,6 +45,15 @@ pipeline{
                 }
             }
         }
+
+        stage("Run Container"){
+            steps{
+                script{
+                    sh "docker rm -f ${IMAGE_NAME}||true"
+                    sh "docker run -d --name net_core_app -p 8000:80 ${IMAGE_NAME}:${IMAGE_TAG}"
+                }
+            }
+        }
     }
     post {
         success {
