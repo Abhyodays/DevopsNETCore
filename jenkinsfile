@@ -50,7 +50,8 @@ pipeline{
     post {
         success {
             script {
-                sh "docker rmi \$(docker images -f 'dangling=true' '${IMAGE_NAME}' -q)"
+                sh "docker rmi $(docker images -f 'dangling=true' '${IMAGE_NAME}' -q)"
+
             }
         }
     }
