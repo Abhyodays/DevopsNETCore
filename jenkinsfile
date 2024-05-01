@@ -35,13 +35,7 @@ pipeline{
                 }
             }
         }
-         stage('Remove Old Images') {
-            steps {
-                script {
-                    sh 'docker rmi $(docker images -f "dangling=true" -q --filter=reference="abhyoday/devops_net_core") || true'
-                }
-            }
-        }
+
         stage("Docker Push"){
             steps{
                 script{
@@ -51,6 +45,16 @@ pipeline{
                 }
             }
         }
-  
-}
+    }
+    post {
+        success {
+            script {
+                 sh """
+                images_to_remove=\$(docker images -f "dangling=true" -q --filter=reference="${IMAGE_NAME}*")
+                if [ -n "\$images_to_remove" ]; then
+                    docker rmi \$images_to_remove
+                    """
+            }
+        }
+    }
 }
