@@ -48,11 +48,12 @@ pipeline{
     }
     //removing old image on
     post {
-        success {
-            script {
-                sh "docker rmi \$(docker images -f 'dangling=true' "${IMAGE_NAME}" -q)"
-
-            }
-        }
+  success {
+    script {
+      docker.withRegistry(null, null) { // No registry needed here
+        docker.image("${IMAGE_NAME}:latest").pruneDangling()
+      }
     }
+  }
+}
 }
