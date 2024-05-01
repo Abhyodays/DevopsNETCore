@@ -46,4 +46,12 @@ pipeline{
             }
         }
     }
+    //removing old image on success
+    post {
+        success {
+            script {
+                sh "docker rmi \$(docker images -f \"dangling=true\" \"${IMAGE_NAME}\" -q)"
+            }
+        }
+    }
 }
