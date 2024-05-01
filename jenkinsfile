@@ -1,0 +1,43 @@
+pipeline{
+    agent any
+
+    environment {
+        IMAGE_NAME = 'abhyoday/devops_net_core'
+        IMAGE_TAG = 'latest'
+    }
+
+    stages{
+        stage('Checkout'){
+            steps{
+                checkout scm
+            }
+        }
+        stage('Build'){
+            steps{
+                sh 'dotnet build MVCApplication/MVCApplication.csproj --configuration Release'
+            }
+        }
+        stage('Test'){
+            steps{
+                sh 'dotnet test MVCApplication.Tests/MVCApplication.Tests.csproj --logger:"trx;LogFileName=TestResults.trx"'
+            }
+        }
+        stage('Docker Build'){
+            steps{
+                script{
+                    docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
+                }
+            }
+        }
+
+        stage("Docker Push"){
+            steps{
+                script{
+                    docker.withRegistry('https://index.docker.io/v1/','docker_login'){
+                        docker.image("${IMAGE_NAME}:${IMAGE_TAG}").push()
+                    }
+                }
+            }
+        }
+    }
+}
