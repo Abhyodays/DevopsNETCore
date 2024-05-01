@@ -49,7 +49,7 @@ pipeline{
         stage("Run Container"){
             steps{
                 script{
-                    sh "docker rm -f ${IMAGE_NAME}||true"
+                    sh "docker rm -f net_core_app||true"
                     sh "docker run -d --name net_core_app -p 8000:5000 ${IMAGE_NAME}:${IMAGE_TAG}"
                 }
             }
