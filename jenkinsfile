@@ -35,7 +35,13 @@ pipeline{
                 }
             }
         }
-
+         stage('Remove Old Images') {
+            steps {
+                script {
+                    sh 'docker rmi \$(docker images -f "dangling=true" -q "${IMAGE_NAME}")'
+                }
+            }
+        }
         stage("Docker Push"){
             steps{
                 script{
@@ -45,15 +51,6 @@ pipeline{
                 }
             }
         }
-    }
-    //removing old image on
-    post {
-  success {
-    script {
-      docker.withRegistry(null, null) { // No registry needed here
-        docker.image("${IMAGE_NAME}:latest").pruneDangling()
-      }
-    }
-  }
+  
 }
 }
