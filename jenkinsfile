@@ -33,7 +33,7 @@ pipeline{
           stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner begin /k:'your-project-key' /n:'Your Project Name' /v:'1.0' /d:sonar.cs.nunit.reportsPaths='MVCApplication.Tests/TestResults/TestResults.trx'"
+                    sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner begin /k:'net_core_app' /d:sonar.host.url='http://localhost:9000'  /d:sonar.token='sqp_2dfd6e65c1938d7fdf2fee5a1af418f425f8caaa'"
                     sh 'dotnet build MVCApplication/MVCApplication.csproj --configuration Release'
                     sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner end"
                 }
