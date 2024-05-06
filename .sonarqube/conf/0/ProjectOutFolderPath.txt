@@ -1,0 +1,1 @@
+/mnt/c/Users/abhyodaysingh/Test Project/Devops/MVCApplication/.sonarqube/out/0

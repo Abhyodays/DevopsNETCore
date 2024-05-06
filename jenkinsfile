@@ -4,6 +4,7 @@ pipeline{
     environment {
         IMAGE_NAME = 'abhyoday/devops_net_core'
         IMAGE_TAG = 'latest'
+        SONAR_SCANNER_HOME = tool 'sonarscanner'
     }
 
     stages{
@@ -28,6 +29,17 @@ pipeline{
                 sh 'dotnet test MVCApplication.Tests/MVCApplication.Tests.csproj --logger:"trx;LogFileName=TestResults.trx"'
             }
         }
+
+          stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner begin /k:'your-project-key' /n:'Your Project Name' /v:'1.0' /d:sonar.cs.nunit.reportsPaths='MVCApplication.Tests/TestResults/TestResults.trx'"
+                    sh 'dotnet build MVCApplication/MVCApplication.csproj --configuration Release'
+                    sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner end"
+                }
+            }
+        }
+
         stage('Docker Build'){
             steps{
                 script{
