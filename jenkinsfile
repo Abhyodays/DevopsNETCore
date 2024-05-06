@@ -34,8 +34,8 @@ pipeline{
 
           stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') {
-                    sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner begin /k:${SONARQUBE_KEY} /d:${SONARQUBE_TOKEN} "
+                withSonarQubeEnv('sonarqube','net_core_app') {
+                    sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner begin /n:${SONARQUBE_KEY} "
                     sh 'dotnet build MVCApplication/MVCApplication.csproj --configuration Release'
                     sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner end"
                 }
