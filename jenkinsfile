@@ -5,8 +5,6 @@ pipeline{
         IMAGE_NAME = 'abhyoday/devops_net_core'
         IMAGE_TAG = 'latest'
         SONAR_SCANNER_HOME = tool 'sonarscanner'
-        SONARQUBE_KEY = "net_core_app"
-        SONARQUBE_TOKEN = "sqp_c180a6277b9e10494c56d0d988dd19940ece876c"
     }
 
     stages{
@@ -31,16 +29,17 @@ pipeline{
                 sh 'dotnet test MVCApplication.Tests/MVCApplication.Tests.csproj --logger:"trx;LogFileName=TestResults.trx"'
             }
         }
-
-          stage('SonarQube Analysis') {
+        stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube','net_core_app') {
-                    sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner begin /n:${SONARQUBE_KEY} "
-                    sh 'dotnet build MVCApplication/MVCApplication.csproj --configuration Release'
-                    sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner end"
+                script {
+                    def scannerHome = tool 'sonarscanner'
+                    withSonarQubeEnv('sonarqube') {
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=net_core_app -Dsonar.sources=."
+                    }
                 }
             }
         }
+          
 
         stage('Docker Build'){
             steps{
